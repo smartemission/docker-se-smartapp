@@ -3,6 +3,10 @@
 The `SmartApp` is a minimal web application that shows the current values of
 SE sensor stations.
 
+## Hosting
+
+The Docker Image is hosted as: [smartemission/se-smartapp at DockerHub](https://hub.docker.com/r/smartemission/se-smartapp).
+
 ## Environment
 
 At the moment no environment variables are required: the `SmartApp` will use the
