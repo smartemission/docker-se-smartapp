@@ -105,6 +105,10 @@ $(document).ready(function () {
     // Show the station side bar popup
     function show_station_popup(feature) {
         var stationId = feature.properties.id;
+        var date = new Date(feature.properties.last_update);
+        var dateTime = date.toLocaleDateString('nl-NL') + ' om ' + date.toLocaleTimeString('nl-NL') + " NL";
+        feature.properties.last_update_fmt = dateTime;
+
         var timeseriesUrl = apiUrl + '/timeseries?format=json&station=' + stationId + '&expanded=true&callback=?';
 
         $.getJSON(timeseriesUrl, function (data) {
