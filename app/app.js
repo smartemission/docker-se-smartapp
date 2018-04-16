@@ -74,10 +74,10 @@ $(document).ready(function () {
     // Create icon based on feature props and selected state
     function getMarkerIcon(feature, selected) {
         // Default
-        var iconUrl = feature.properties['value_stale'] == '0' ? 'media/locatie-icon.png' : 'media/locatie-icon-stale.png';
+        var iconUrl = feature.properties['value_stale'] == '0' ? '/X_SCRIPT_NAME/media/locatie-icon.png' : '/X_SCRIPT_NAME/media/locatie-icon-stale.png';
 
         return new L.icon({
-            iconUrl: selected ? 'media/locatie-icon-click.png' : iconUrl,
+            iconUrl: selected ? '/X_SCRIPT_NAME/media/locatie-icon-click.png' : iconUrl,
             iconSize: [24, 41],
             iconAnchor: [10, 40]
         });
@@ -263,7 +263,7 @@ $(document).ready(function () {
             // img.style.width = '60px';
             // return img;
             var content = L.DomUtil.create('div', 'aboutse');
-            content.innerHTML = '<a target="_new" href="/"><img src="media/selogo1.png" width="50px"/></a><br><h4 style="background: white;"><a target="_new" href="/">Smart Emission</a></h4>';
+            content.innerHTML = '<a target="_new" href="/"><img src="/X_SCRIPT_NAME/media/selogo1.png" width="50px"/></a><br><h4 style="background: white;"><a target="_new" href="/">Smart Emission</a></h4>';
             return content;
         },
 
