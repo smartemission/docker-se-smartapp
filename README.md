@@ -15,6 +15,11 @@ locally running `sosemu` API.
 ## Architecture
 
 The image contains a static HTML webapp running in an `nginx` webserver.
+
+The app should be accessed via the URL `<container-address>/smartapp`.
+Main reason is to allow `nginx` to do a relative `301` redirect to `/smartapp/`, i.s.o.
+every reverse proxy like Kubernetes or Traefik to bother with redirects.
+
 It uses Leaflet for mapping and Handlebars for client-side templating.
 
 The app uses the `sosemu` API service which is called via JSONP from the browser.
