@@ -8,7 +8,7 @@ $(document).ready(function () {
     // Create Map with layers
     var map = new L.Map('map', {zoom: init_zoom, center: init_center});
     // var mapUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    var mapUrl = 'http://geodata.nationaalgeoregister.nl/tiles/service/wmts/brtachtergrondkaartgrijs/EPSG:3857/{z}/{x}/{y}.png';
+    var mapUrl = 'https://geodata.nationaalgeoregister.nl/tiles/service/wmts/brtachtergrondkaartgrijs/EPSG:3857/{z}/{x}/{y}.png';
     var mapAttrib = 'Basemap BRT from <a href="https://www.pdok.nl">Dutch Kadaster PDOK</a>';
     var mapTiles = new L.TileLayer(mapUrl, {attribution: mapAttrib});
     map.addLayer(mapTiles);
