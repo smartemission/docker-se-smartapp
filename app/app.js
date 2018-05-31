@@ -7,10 +7,11 @@ $(document).ready(function () {
 
     // Create Map with layers
     var map = new L.Map('map', {zoom: init_zoom, center: init_center});
-    var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    var osmAttrib = 'Map data <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-    var osmTiles = new L.TileLayer(osmUrl, {attribution: osmAttrib});
-    map.addLayer(osmTiles);
+    // var mapUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    var mapUrl = 'http://geodata.nationaalgeoregister.nl/tiles/service/wmts/brtachtergrondkaartgrijs/EPSG:3857/{z}/{x}/{y}.png';
+    var mapAttrib = 'Basemap BRT from <a href="https://www.pdok.nl">Dutch Kadaster PDOK</a>';
+    var mapTiles = new L.TileLayer(mapUrl, {attribution: mapAttrib});
+    map.addLayer(mapTiles);
 
     // Precompile Handlebars.js Template
     var source = $("#entry-template").html();
@@ -27,10 +28,10 @@ $(document).ready(function () {
     var oldMarkerId;
 
     // Split into categories for ease of templating: gasses, meteo and audio
-    // See https://github.com/Geonovum/smartemission/blob/master/etl/sensordefs.py for
+    // See https://github.com/smartemission/smartemission/blob/master/etl/sensordefs.py for
     // sensor-component names
     // var gasIds = 'co2,o3,no2,co,o3raw,coraw,no2raw,pm10,pm2_5';
-    // No Raw Values: https://github.com/Geonovum/smartemission/issues/83
+    // No Raw Values: https://github.com/smartemission/smartemission/issues/83
     var gasIds = 'co2,o3,no2,co,pm10,pm2_5';
     var meteoIds = 'temperature,pressure,humidity';
     var audioIds = 'noiseavg,noiselevelavg';
