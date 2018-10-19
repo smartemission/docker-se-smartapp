@@ -60,13 +60,17 @@
                     <div class="w3-container">
                         <p>&nbsp;</p>
                         <table cellspacing="6" cellpadding="8">
+                            <tr>
+                                <td><h5>Project&nbsp;&nbsp;&nbsp;&nbsp;</h5></td>
+                                <td><h5>{{ station.properties.project_str }}</h5></td>
+                            </tr>
                              <tr>
                                 <td><h5>Locatie&nbsp;&nbsp;&nbsp;&nbsp;</h5></td>
                                 <td><h5>{{ station.geometry.coordinates.[1] }}, {{ station.geometry.coordinates.[0]
                                     }} </h5></td>
                             </tr>
                             <tr>
-                                <td><h5>Laatste&nbsp;&nbsp;</h5><h5>Meting&nbsp;&nbsp;</h5></td>
+                                <td><h5>Gemeten</h5></td>
                                 <td><h5>{{ station.properties.last_update_fmt }}</h5></td>
                             </tr>
                         </table>

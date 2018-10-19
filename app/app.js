@@ -18,8 +18,8 @@ $(document).ready(function () {
     var template = Handlebars.compile(source);
 
     // URL of the Smart Emission SOS REST API
-    // var apiUrl = 'http://api.smartemission.nl/sosemu/api/v1';
-    var apiUrl = '/sosemu/api/v1';
+    var apiUrl = 'https://data.smartemission.nl/sosemu/api/v1';
+    // var apiUrl = '/sosemu/api/v1';
 
     // See http://stackoverflow.com/questions/11916780/changing-getjson-to-jsonp
     // Notice the callback=? . This triggers a JSONP call
@@ -103,12 +103,33 @@ $(document).ready(function () {
         // return false;
     }
 
+    var projectInfo = {
+        '1182': {'id_str': 'asenl', 'name': 'AirSensEUR NL'},
+        '2008': {'id_str': 'gcn', 'name': 'Green Capital Nijmegen'},
+        '2*': {'id_str': 'scll', 'name': 'Smart City Living Lab'},
+        '0000': {'id_str': 'sen', 'name': 'Smart Emission Nijmegen'}
+    };
+
+    // Get project id string from station nr
+    function getProject(station_id) {
+        var projectId = '0000';
+        if (station_id.length == 8) {
+            projectId = station_id.slice(0, 4);
+            if (projectId != '2008' && projectId != '1182') {
+                projectId = '2*';
+            } 
+        }
+        return projectInfo[projectId];
+    }
+
     // Show the station side bar popup
     function show_station_popup(feature) {
         var stationId = feature.properties.id;
         var date = new Date(feature.properties.last_update.replace(' ', 'T'));
         var dateTime = date.toLocaleDateString('nl-NL') + ' om ' + date.toLocaleTimeString('nl-NL') + " NL";
         feature.properties.last_update_fmt = dateTime;
+
+        feature.properties.project_str = getProject(stationId).name;
 
         var timeseriesUrl = apiUrl + '/timeseries?format=json&station=' + stationId + '&expanded=true&callback=?';
 
@@ -204,7 +225,14 @@ $(document).ready(function () {
 
         // Callback when getting stations
         var geojson = L.geoJson(data, {
-            pointToLayer: function (feature, latlng) {
+            filter: function(feature, latlng) {
+                // Check query parameter to directly show station values
+                if (query_params.project) {
+                    return query_params.project == getProject(feature.properties.id).id_str;
+                }
+                return true;
+            },
+            makeMarker: function (feature, latlng) {
                 // Create and save Marker
                 var icon = getMarkerIcon(feature, false);
                 var marker = L.marker(latlng, {icon: icon});
