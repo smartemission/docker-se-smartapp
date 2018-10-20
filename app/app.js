@@ -104,10 +104,10 @@ $(document).ready(function () {
     }
 
     var projectInfo = {
-        '1182': {'id_str': 'asenl', 'name': 'AirSensEUR NL'},
-        '2008': {'id_str': 'gcn', 'name': 'Green Capital Nijmegen'},
-        '2*': {'id_str': 'scll', 'name': 'Smart City Living Lab'},
-        '0000': {'id_str': 'sen', 'name': 'Smart Emission Nijmegen'}
+        '1182': {'id_str': 'asenl', 'name': 'AirSensEUR NL', 'markers': []},
+        '2008': {'id_str': 'gcn', 'name': 'Green Capital Nijmegen', 'markers': []},
+        '2*': {'id_str': 'scll', 'name': 'Smart City Living Lab', 'markers': []},
+        '0000': {'id_str': 'sen', 'name': 'Smart Emission Nijmegen', 'markers': []}
     };
 
     // Get project id string from station nr
@@ -129,7 +129,12 @@ $(document).ready(function () {
         var dateTime = date.toLocaleDateString('nl-NL') + ' om ' + date.toLocaleTimeString('nl-NL') + " NL";
         feature.properties.last_update_fmt = dateTime;
 
-        feature.properties.project_str = getProject(stationId).name;
+        // Get project name from station id
+        feature.properties.project_str = 'Onbekend';
+        var project = getProject(stationId);
+        if (project) {
+            feature.properties.project_str = project.name;
+        }
 
         var timeseriesUrl = apiUrl + '/timeseries?format=json&station=' + stationId + '&expanded=true&callback=?';
 
@@ -232,17 +237,21 @@ $(document).ready(function () {
                 }
                 return true;
             },
-            makeMarker: function (feature, latlng) {
+            pointToLayer: function (feature, latlng) {
                 // Create and save Marker
                 var icon = getMarkerIcon(feature, false);
                 var marker = L.marker(latlng, {icon: icon});
                 markers[feature.properties.id] = marker;
+                var project = getProject(feature.properties.id);
+                if (project) {
+                    project.markers.push(marker);
+                }
                 // marker.bindPopup("Popup content");
                 return marker;
             }
-        }).addTo(markerCluster)
-            // When station-marker clicked get Timeseries with last value for that Station
-            .on('mouseover', function (e) {
+        });
+
+        geojson.on('mouseover', function (e) {
                 show_marker_hover(e, feature);
             }).on('mouseout', function (e) {
                 // hide_marker_hover(e, feature);
@@ -250,7 +259,17 @@ $(document).ready(function () {
                 show_station_popup(e.layer.feature);
             });
 
-        map.addLayer(markerCluster);
+        var subGroups = {};
+        for (var projectId in projectInfo) {
+            var subGroup = L.featureGroup.subGroup(markerCluster, projectInfo[projectId].markers);
+            subGroup.addTo(map);
+            subGroups[projectInfo[projectId].name] = subGroup;
+        }
+
+        markerCluster.addTo(map);
+        var collapsed = false;
+        L.control.layers([], subGroups,{collapsed: collapsed}).addTo(map);
+        $(".leaflet-control-layers-overlays").prepend("<label>Projecten</label>");
 
         // Check query parameter to directly show station values
         if (query_params.station && markers[query_params.station]) {
