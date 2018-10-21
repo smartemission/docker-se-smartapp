@@ -18,8 +18,8 @@ $(document).ready(function () {
     var template = Handlebars.compile(source);
 
     // URL of the Smart Emission SOS REST API
-    // var apiUrl = 'https://data.smartemission.nl/sosemu/api/v1';
     var apiUrl = '/sosemu/api/v1';
+    // apiUrl = 'https://data.smartemission.nl/sosemu/api/v1';
 
     // See http://stackoverflow.com/questions/11916780/changing-getjson-to-jsonp
     // Notice the callback=? . This triggers a JSONP call
@@ -126,7 +126,7 @@ $(document).ready(function () {
     function show_station_popup(feature) {
         var stationId = feature.properties.id;
         var date = new Date(feature.properties.last_update.replace(' ', 'T'));
-        var dateTime = date.toLocaleDateString('nl-NL') + ' om ' + date.toLocaleTimeString('nl-NL') + " NL";
+        var dateTime = date.toLocaleDateString('nl-NL') + '&nbsp;' + date.toLocaleTimeString('nl-NL') + " NL";
         feature.properties.last_update_fmt = dateTime;
 
         // Get project name from station id
@@ -230,13 +230,6 @@ $(document).ready(function () {
 
         // Callback when getting stations
         var geojson = L.geoJson(data, {
-            filter: function(feature, latlng) {
-                // Check query parameter to directly show station values
-                if (query_params.project) {
-                    return query_params.project == getProject(feature.properties.id).id_str;
-                }
-                return true;
-            },
             pointToLayer: function (feature, latlng) {
                 // Create and save Marker
                 var icon = getMarkerIcon(feature, false);
@@ -261,6 +254,11 @@ $(document).ready(function () {
 
         var subGroups = {};
         for (var projectId in projectInfo) {
+            // Project param allows showing only project layer markers
+            if (query_params.project && query_params.project !== projectInfo[projectId].id_str) {
+                continue;
+            }
+
             var subGroup = L.featureGroup.subGroup(markerCluster, projectInfo[projectId].markers);
             subGroup.addTo(map);
             subGroups[projectInfo[projectId].name] = subGroup;
