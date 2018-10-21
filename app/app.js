@@ -126,7 +126,7 @@ $(document).ready(function () {
     function show_station_popup(feature) {
         var stationId = feature.properties.id;
         var date = new Date(feature.properties.last_update.replace(' ', 'T'));
-        var dateTime = date.toLocaleDateString('nl-NL') + '&nbsp;' + date.toLocaleTimeString('nl-NL') + " NL";
+        var dateTime = date.toLocaleDateString('nl-NL') + ' ' + date.toLocaleTimeString('nl-NL') + " NL";
         feature.properties.last_update_fmt = dateTime;
 
         // Get project name from station id
