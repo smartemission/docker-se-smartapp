@@ -18,8 +18,8 @@ $(document).ready(function () {
     var template = Handlebars.compile(source);
 
     // URL of the Smart Emission SOS REST API
-    var apiUrl = 'https://data.smartemission.nl/sosemu/api/v1';
-    // var apiUrl = '/sosemu/api/v1';
+    // var apiUrl = 'https://data.smartemission.nl/sosemu/api/v1';
+    var apiUrl = '/sosemu/api/v1';
 
     // See http://stackoverflow.com/questions/11916780/changing-getjson-to-jsonp
     // Notice the callback=? . This triggers a JSONP call
