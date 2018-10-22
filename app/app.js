@@ -9,9 +9,17 @@ $(document).ready(function () {
     var map = new L.Map('map', {zoom: init_zoom, center: init_center});
     // var mapUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     var mapUrl = 'https://geodata.nationaalgeoregister.nl/tiles/service/wmts/brtachtergrondkaartgrijs/EPSG:3857/{z}/{x}/{y}.png';
-    var mapAttrib = 'Basemap BRT from <a href="https://www.pdok.nl">Dutch Kadaster PDOK</a>';
+    var mapAttrib = 'Baselayer: <a href="https://www.pdok.nl">Dutch Kadaster PDOK</a>';
     var mapTiles = new L.TileLayer(mapUrl, {attribution: mapAttrib});
     map.addLayer(mapTiles);
+    
+    var mapLufoUrl = 'https://s.map5.nl/map/map5.demo11/tiles/openlufo/EPSG900913/{z}/{x}/{y}.jpeg?origin=nw';
+    var mapLufoTiles = new L.TileLayer(mapLufoUrl, {attribution: 'Baselayer: <a href="https://map5.nl">map5.nl and PDOK</a>'});
+
+    var baseLayers = {
+        'Topografie':mapTiles,
+        'Luchtfoto': mapLufoTiles
+    };
 
     // Precompile Handlebars.js Template
     var source = $("#entry-template").html();
@@ -19,7 +27,7 @@ $(document).ready(function () {
 
     // URL of the Smart Emission SOS REST API
     var apiUrl = '/sosemu/api/v1';
-    // apiUrl = 'https://data.smartemission.nl/sosemu/api/v1';
+    apiUrl = 'https://data.smartemission.nl/sosemu/api/v1';
 
     // See http://stackoverflow.com/questions/11916780/changing-getjson-to-jsonp
     // Notice the callback=? . This triggers a JSONP call
@@ -265,8 +273,9 @@ $(document).ready(function () {
         }
 
         markerCluster.addTo(map);
-        var collapsed = false;
-        L.control.layers([], subGroups,{collapsed: collapsed}).addTo(map);
+        var collapsed = true;
+        L.control.layers(baseLayers, subGroups, {collapsed: collapsed}).addTo(map);
+        // $(".leaflet-control-layers-baselayers").prepend("<label>Basislagen</label>");
         $(".leaflet-control-layers-overlays").prepend("<label>Projecten</label>");
 
         // Check query parameter to directly show station values
