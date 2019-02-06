@@ -27,7 +27,7 @@ $(document).ready(function () {
 
     // URL of the Smart Emission SOS REST API
     var apiUrl = '/sosemu/api/v1';
-    // apiUrl = 'https://test.smartemission.nl/sosemu/api/v1';
+    apiUrl = 'https://test.smartemission.nl/sosemu/api/v1';
 
     // See http://stackoverflow.com/questions/11916780/changing-getjson-to-jsonp
     // Notice the callback=? . This triggers a JSONP call
@@ -116,19 +116,23 @@ $(document).ready(function () {
         '1182': {'id_str': 'asenl', 'name': 'AirSensEUR NL', 'markers': []},
         '2008': {'id_str': 'gcn', 'name': 'Green Capital Nijmegen', 'markers': []},
         '2*': {'id_str': 'scll', 'name': 'Smart City Living Lab', 'markers': []},
-        '0000': {'id_str': 'sen', 'name': 'Smart Emission Nijmegen', 'markers': []}
+        '0000': {'id_str': 'sen', 'name': 'Smart Emission Nijmegen', 'markers': []},
+        '4931': {'id_str': 'ltdnl', 'name': 'Luftdaten NL', 'markers': []},
     };
 
     // Get project id string from station nr
     function getProject(station_id) {
-        var projectId = '0000';
-        if (station_id.length == 8) {
-            projectId = station_id.slice(0, 4);
-            if (projectId != '2008' && projectId != '1182') {
-                projectId = '2*';
-            } 
+        var project = projectInfo['0000'];
+        if (station_id.length >= 8) {
+            var projectId = station_id.slice(0, 4);
+            project = projectInfo[projectId];
+            if (!project) {
+                // Smart City Living Lab uses several prefixes
+                project = projectInfo['2*'];
+            }
         }
-        return projectInfo[projectId];
+
+        return project;
     }
 
     // Show the station side bar popup
